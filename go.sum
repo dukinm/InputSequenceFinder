@@ -1,0 +1,4 @@
+github.com/hallazzang/go-windows-programming v0.0.0-20190526062745-ff0b400d8c7b h1:nvshX00dDuFF+SeLjM2aifVPq6u4K5XtnjgF2zy91q0=
+github.com/hallazzang/go-windows-programming v0.0.0-20190526062745-ff0b400d8c7b/go.mod h1:cZ6tEkgp3+YsYT6Uh2HuoEifMLZ8QzjJIbOY//kwD1g=
+golang.org/x/sys v0.2.0 h1:ljd4t30dBnAvMZaQCevtY0xLLD0A+bRZXbgLMLU1F/A=
+golang.org/x/sys v0.2.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
