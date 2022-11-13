@@ -8,7 +8,6 @@ import (
 	"unsafe"
 )
 
-
 type (
 	DWORD     uint32
 	WPARAM    uintptr
@@ -40,6 +39,7 @@ var (
 	procDispatchMessage     = user32.NewProc("DispatchMessageW")
 	keyboardHook            HHOOK
 )
+
 const (
 	WH_KEYBOARD_LL = 13
 	WH_KEYBOARD    = 2
@@ -77,55 +77,51 @@ func CallNextHookEx(hhk HHOOK, nCode int, wParam WPARAM, lParam LPARAM) LRESULT 
 	return LRESULT(ret)
 }
 
-
-
 type UpdateFunc func(input string)
 
-func Detect(startToken string, endToken string, callback UpdateFunc){
+func Detect(startToken string, endToken string, callback UpdateFunc) {
 	line := ""
 	shiftWasDown := false
-
-
 
 	keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,
 		func(nCode int, wparam WPARAM, lparam LPARAM) LRESULT {
 			if nCode == 0 && wparam == WM_KEYUP {
 				kbdstruct := (*KBDLLHOOKSTRUCT)(unsafe.Pointer(lparam))
-				if (kbdstruct.VkCode == 160) {
+				if kbdstruct.VkCode == 160 {
 					shiftWasDown = false
 				}
 			} else if nCode == 0 && wparam == WM_KEYDOWN {
 				kbdstruct := (*KBDLLHOOKSTRUCT)(unsafe.Pointer(lparam))
 				code := string(rune(kbdstruct.VkCode))
 
-				if (kbdstruct.VkCode == 160) {//
+				if kbdstruct.VkCode == 160 { //
 					shiftWasDown = true
 				}
 				if code != " " && code != "	" && code != " " && code != "\b" {
-					if (code == "Û") {
+					if code == "Û" {
 						code = "{"
-					} else if (code == "Þ") {
+					} else if code == "Þ" {
 						code = "\""
-					} else if (code == "º") {
+					} else if code == "º" {
 						code = ":"
-					} else if (code == "¼") {
+					} else if code == "¼" {
 						code = ","
-					} else if (code == "Ý") {
+					} else if code == "Ý" {
 						code = "}"
-					} else if (code == "¾") {
+					} else if code == "¾" {
 						code = "."
-					} else if (code == "½") {
+					} else if code == "½" {
 						code = "_"
-					} else if (code == "2" && shiftWasDown) {
+					} else if code == "2" && shiftWasDown {
 						code = "@"
 					}
 					line += code
 					shiftWasDown = false
-					if(strings.Contains(line, startToken) && strings.Contains(line, endToken)) {
+					if strings.Contains(line, startToken) && strings.Contains(line, endToken) {
 						startCommandIndex := strings.Index(line, startToken)
 						endCommandIndex := strings.Index(line, endToken)
 						command := line[(startCommandIndex + len(startToken)):endCommandIndex]
-						//fmt.Println(command)
+						line = ""
 						callback(command)
 					}
 				}
